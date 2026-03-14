@@ -29,14 +29,14 @@ export function initVRMAvatar(containerId) {
 
     // Camera
     camera = new THREE.PerspectiveCamera(30.0, container.clientWidth / container.clientHeight, 0.1, 20.0);
-    camera.position.set(0.0, 1.3, 1.5); // Adjust for Bust-up
+    camera.position.set(0.0, 1.5, 1.0); // Adjust for Bust-up
 
     // OrbitControls (視点操作)
     controls = new OrbitControls(camera, renderer.domElement);
-    controls.enablePan = false; // 平行移動を禁止し、中心を固定
+    controls.enablePan = true; // 平行移動を許可
     controls.minDistance = 0.5; // 寄りすぎ制限
     controls.maxDistance = 2.0; // 離れすぎ制限
-    controls.target.set(0, 1.4, 0); // 回転の中心をアバターの顔〜首の高さに設定
+    controls.target.set(0, 1.5, 0); // 回転の中心を顔の高さに設定
     controls.enableDamping = true; // 操作を滑らかにするための慣性
     controls.dampingFactor = 0.1;
     controls.update(); // 初期設定を適用
@@ -79,8 +79,9 @@ export function initVRMAvatar(containerId) {
                 if (headNode) {
                     const headPos = new THREE.Vector3();
                     headNode.getWorldPosition(headPos);
-                    camera.position.set(0, headPos.y + 0.05, 1.4);
-                    camera.lookAt(0, headPos.y + 0.05, 0);
+                    camera.position.set(0, headPos.y, 1.0);
+                    controls.target.set(0, headPos.y, 0);
+                    controls.update();
                 }
 
                 // Tポーズの修正（必須）: 腕を自然に下ろす
