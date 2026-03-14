@@ -1,5 +1,6 @@
 import './style.css';
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { initVRMAvatar, setTalkingMode } from './vrm-avatar.js';
 
 // --- Global State ---
 let isListening = false;
@@ -232,14 +233,17 @@ function speakBack(msg, isUrgent = false) {
 
   utterance.onstart = () => {
     if (avatarWrapper) avatarWrapper.classList.add('talking');
+    if (currentMode === 'gunma') setTalkingMode(true);
   };
 
   utterance.onend = () => {
     if (avatarWrapper) avatarWrapper.classList.remove('talking');
+    setTalkingMode(false);
   };
 
   utterance.onerror = () => {
     if (avatarWrapper) avatarWrapper.classList.remove('talking');
+    setTalkingMode(false);
   };
 
   window.speechSynthesis.speak(utterance);
@@ -302,6 +306,9 @@ hiddenSwitch.addEventListener('click', () => {
 
 // Initial Welcome
 window.addEventListener('load', () => {
+  // 3Dアバターの初期化
+  initVRMAvatar('avatar-wrapper');
+
   setTimeout(() => {
     speakBack(CHARACTERS[currentMode].welcome);
   }, 1000);

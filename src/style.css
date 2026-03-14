@@ -357,58 +357,21 @@ body.theme-gunma {
 /* --- Avatar Component --- */
 .avatar-wrapper {
   position: relative;
-  width: clamp(160px, 35vh, 260px);
-  height: clamp(160px, 35vh, 260px);
-  margin-top: clamp(100px, 15vh, 140px);
-  /* 画面上部のトグルと被らないようにレスポンシブな余白 */
-  margin-bottom: 15px;
-  border-radius: 50%;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  width: clamp(200px, 45vh, 320px);
+  height: clamp(200px, 45vh, 320px);
+  margin-top: clamp(60px, 10vh, 100px);
+  margin-bottom: 25px;
   z-index: 20;
   transition: opacity 0.3s ease;
   overflow: visible;
-  background-image: url('/gunma-avatar.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   pointer-events: none;
-  /* マイクボタンのクリックを妨げないように */
   flex-shrink: 0;
-
-  /* 待機中のゆっくりとした呼吸アニメーション */
-  animation: breathe 4s ease-in-out infinite;
 }
 
-/* 発話中（喋っている時）のアニメーション */
-.avatar-wrapper.talking {
-  /* リズミカルな拡大縮小とオレンジ色の後光の明滅 */
-  animation: talk-pulse 0.4s ease-in-out infinite alternate;
-}
-
-@keyframes breathe {
-
-  0%,
-  100% {
-    transform: scale(1) translateY(0);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  }
-
-  50% {
-    transform: scale(1) translateY(-4px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  }
-}
-
-@keyframes talk-pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 20px rgba(255, 152, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.15);
-  }
-
-  100% {
-    transform: scale(1.02);
-    box-shadow: 0 0 50px rgba(255, 106, 0, 0.8), 0 15px 35px rgba(0, 0, 0, 0.3);
-  }
+.avatar-wrapper canvas {
+  width: 100% !important;
+  height: 100% !important;
+  outline: none;
 }
 
 /* Adjust big button margin to accommodate avatar */
