@@ -124,39 +124,32 @@ export function initVRMAvatar(containerId) {
     });
     resizeObserver.observe(container);
 
-    // ここでの AudioContext 自動初期化を削除（スマホの自動再生ブロック回避のため、ユーザー操作時に実行）
-
-    update();
-}
-
-export async function initAudio() {
-    if (audioContext) {
-        if (audioContext.state === 'suspended') await audioContext.resume();
-        return;
-    }
-
+    // --- Web Audio API Setup ---
     try {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioContext.createAnalyser();
         analyser.fftSize = 256;
         dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-        // スマホ対策・マイクへのアクセス要求（ユーザーアクション内で行う）
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const source = audioContext.createMediaStreamSource(stream);
-        source.connect(analyser);
-        
-        if (audioContext.state === 'suspended') await audioContext.resume();
     } catch (e) {
-        console.warn('Mic access denied or error:', e);
+        console.warn("AudioContext setup failed:", e);
+    }
+
+    update();
+}
+
+export function resumeAudio() {
+    if (audioContext && audioContext.state === 'suspended') {
+        try {
+            audioContext.resume();
+        } catch (e) {
+            console.warn('AudioContext resume error:', e);
+        }
     }
 }
 
 export function setTalkingMode(talking) {
     isTalking = talking;
-    if (talking && audioContext && audioContext.state === 'suspended') {
-        audioContext.resume();
-    }
+    if (talking) resumeAudio();
 }
 
 function update() {
@@ -170,15 +163,14 @@ function update() {
         // 1. Audio Lip Sync (音声リップシンク)
         let volume = 0;
 
-        if (analyser && dataArray) {
+        if (dataArray) {
             if (isTalking) {
-                // AIが話している時のシミュレーション
+                // AIが話している時のシミュレーション波形
                 for (let i = 0; i < dataArray.length; i++) {
                     dataArray[i] = Math.random() * 255;
                 }
             } else {
-                // マイクからのリアルタイム波形
-                analyser.getByteFrequencyData(dataArray);
+                dataArray.fill(0); // 待機時は口を閉じる
             }
 
             // 解析して音の大きさを算出
@@ -187,13 +179,7 @@ function update() {
                 sum += dataArray[i];
             }
             const average = sum / dataArray.length;
-            
-            if (!isTalking && average < 5) {
-                // ノイズ対策のしきい値
-                volume = 0;
-            } else {
-                volume = average / 255.0; // 0.0 ~ 1.0
-            }
+            volume = average / 255.0; // 0.0 ~ 1.0
         }
 
         // 口のブレンドシェイプを動かす (VRM 1.0 は 'aa', VRM 0.x は 'a'。@pixiv/three-vrmはよしなに処理してくれます)

@@ -364,7 +364,7 @@ body.theme-gunma {
   z-index: 20;
   transition: opacity 0.3s ease;
   overflow: visible;
-  pointer-events: none;
+  pointer-events: auto;
   flex-shrink: 0;
 }
 
