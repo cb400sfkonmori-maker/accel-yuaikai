@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // --- Global State ---
 let isListening = false;
-let currentMode = 'yoriso'; // 'yoriso' or 'mba'
+let currentMode = 'yoriso';
 let tapCount = 0;
 let lastTap = 0;
 
@@ -28,7 +28,6 @@ const statusPulse = document.querySelector('.pulse');
 const statusText = document.getElementById('status-text');
 const hiddenSwitch = document.getElementById('hidden-switch');
 const toggleYoriso = document.getElementById('toggle-yoriso');
-const toggleMba = document.getElementById('toggle-mba');
 const toggleGunma = document.getElementById('toggle-gunma');
 const body = document.body;
 
@@ -52,17 +51,6 @@ const CHARACTERS = {
 優しく、穏やかで、共感的な態度でユーザーに接してください。
 高齢者や助けを必要としている人に寄り添うような口調（敬語で、ゆっくりとしたテンポを感じさせる文章）で話してください。
 励ましや労いの言葉を大切にし、相手の感情を包み込むような返答を心がけてください。
-返答は短く簡潔に（2〜3文程度）してください。`
-  },
-  mba: {
-    name: 'MBA先輩',
-    welcome: 'やあ！今のビジネスの進捗はどうだい？KPIは達成できそうか？',
-    listening: '要件を簡潔に頼むよ。時間は有限だからね。',
-    thinking: 'ロジックを確認中だ...',
-    prompt: `あなたは『MBA先輩』です。
-論理的で、自信に満ち、結果重視のビジネスマンです。
-少し厳しいけれど愛のある指導者として、MBA用語（KPI, ロジック, ストラテジーなど）を適度に混ぜながら、活発でエネルギーのある口調で話してください。
-ユーザーの行動を促すような、キレのあるアドバイスを心がけてください。
 返答は短く簡潔に（2〜3文程度）してください。`
   },
   gunma: {
@@ -229,10 +217,6 @@ function speakBack(msg, isUrgent = false) {
     const maleVoice = voices.find(v => v.lang.startsWith('ja') && (v.name.includes('Ichiro') || v.name.includes('Keita') || v.name.includes('Male')));
     if (maleVoice) utterance.voice = maleVoice;
 
-  } else if (currentMode === 'mba') {
-    // MBA先輩: ハキハキと速め
-    utterance.pitch = 1.0;
-    utterance.rate = 1.2;
   } else {
     // 寄り添い: 少し高め、ゆったり
     utterance.pitch = 1.1;
@@ -255,7 +239,6 @@ function setMode(mode) {
 
   // Update Toggle UI
   toggleYoriso.classList.toggle('active', mode === 'yoriso');
-  toggleMba.classList.toggle('active', mode === 'mba');
   toggleGunma.classList.toggle('active', mode === 'gunma');
 
   const welcomeMsg = CHARACTERS[mode].welcome;
@@ -271,7 +254,6 @@ closeAlertBtn.addEventListener('click', () => {
 });
 
 toggleYoriso.addEventListener('click', () => setMode('yoriso'));
-toggleMba.addEventListener('click', () => setMode('mba'));
 toggleGunma.addEventListener('click', () => setMode('gunma'));
 
 // Triple tap hidden switch support
@@ -285,7 +267,7 @@ hiddenSwitch.addEventListener('click', () => {
   lastTap = now;
 
   if (tapCount === 3) {
-    const modes = ['yoriso', 'mba', 'gunma'];
+    const modes = ['yoriso', 'gunma'];
     const nextIndex = (modes.indexOf(currentMode) + 1) % modes.length;
     setMode(modes[nextIndex]);
     tapCount = 0;

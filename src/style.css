@@ -1,8 +1,6 @@
 :root {
   --yoriso-bg: #f0f7ff;
   --yoriso-accent: rgba(144, 202, 249, 0.4);
-  --mba-bg: #1a237e;
-  --mba-accent: rgba(0, 188, 212, 0.4);
   --gunma-bg: #fff3e0;
   --gunma-accent: rgba(255, 138, 101, 0.4);
   --text-color: #333;
@@ -42,15 +40,6 @@ body.theme-yoriso {
     radial-gradient(at 0% 100%, rgba(249, 144, 188, 0.2) 0px, transparent 50%);
   background-size: cover;
   background-position: center;
-}
-
-/* Background for MBA mode (Business) */
-body.theme-mba {
-  background-color: var(--mba-bg);
-  color: #fff;
-  background-image:
-    linear-gradient(135deg, rgba(26, 35, 126, 1) 0%, rgba(13, 71, 161, 1) 100%);
-  background-size: cover;
 }
 
 /* Background for Gunma mode (Grandma) */
@@ -167,11 +156,6 @@ body.theme-gunma {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.theme-mba .toggle-btn.active {
-  background: #00bcd4;
-  color: white;
-}
-
 .theme-gunma .toggle-btn.active {
   background: #ff7043;
   color: white;
@@ -200,14 +184,6 @@ body.theme-gunma {
   overflow: hidden;
 }
 
-.theme-mba .big-button {
-  background: linear-gradient(145deg, rgba(0, 188, 212, 0.6), rgba(0, 151, 167, 0.3));
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.2),
-    inset 2px 2px 20px rgba(0, 255, 255, 0.4);
-  border: 1px solid rgba(0, 255, 255, 0.3);
-}
-
 .big-button:active {
   transform: scale(0.92);
   box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.05);
@@ -225,10 +201,6 @@ body.theme-gunma {
   background: currentColor;
   -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,14c1.66,0,3-1.34,3-3V5c0-1.66-1.34-3-3-3S9,3.34,9,5v6C9,12.66,10.34,14,12,14z M17,11c0,2.76-2.24,5-5,5s-5-2.24-5-5H5c0,3.53,2.61,6.43,6,6.92V21h2v-3.08c3.39-0.49,6-3.39,6-6.92H17z"/></svg>') no-repeat center;
   mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,14c1.66,0,3-1.34,3-3V5c0-1.66-1.34-3-3-3S9,3.34,9,5v6C9,12.66,10.34,14,12,14z M17,11c0,2.76-2.24,5-5,5s-5-2.24-5-5H5c0,3.53,2.61,6.43,6,6.92V21h2v-3.08c3.39-0.49,6-3.39,6-6.92H17z"/></svg>') no-repeat center;
-}
-
-.theme-mba .icon-mic {
-  background: white;
 }
 
 #btn-label {
@@ -278,10 +250,6 @@ body.theme-gunma {
   border-radius: 40%;
   opacity: 0.4;
   animation: rotate 6s infinite linear;
-}
-
-.theme-mba .wave {
-  background: var(--mba-accent);
 }
 
 .wave2 {
