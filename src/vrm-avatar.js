@@ -54,6 +54,11 @@ export function initVRMAvatar(containerId) {
             currentVrm = vrm;
             scene.add(vrm.scene);
 
+            // 初期描画バグの修正: シーン追加直後にリサイズを強制発火させ、初回から正しいサイズで描画させる
+            requestAnimationFrame(() => {
+                window.dispatchEvent(new Event('resize'));
+            });
+
             // Rotate 180 deg if model faces backwards by default, though VRM usually faces front
             vrm.scene.rotation.y = Math.PI;
 
@@ -67,11 +72,14 @@ export function initVRMAvatar(containerId) {
                     camera.lookAt(0, headPos.y + 0.05, 0);
                 }
 
-                // Tポーズの修正: 腕を自然に下ろす
+                // Tポーズの修正（必須）: 腕を自然に下ろす
                 const leftUpperArm = vrm.humanoid.getRawBoneNode('leftUpperArm');
                 const rightUpperArm = vrm.humanoid.getRawBoneNode('rightUpperArm');
                 if (leftUpperArm) leftUpperArm.rotation.z = 1.2;
                 if (rightUpperArm) rightUpperArm.rotation.z = -1.2;
+                
+                // 初回描画時にTポーズが一瞬見えないよう、強制的に姿勢を初期更新する
+                vrm.update(0);
             }
 
             VRMUtils.removeUnnecessaryJoints(gltf.scene);
