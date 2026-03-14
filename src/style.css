@@ -1,0 +1,387 @@
+:root {
+  --yoriso-bg: #f0f7ff;
+  --yoriso-accent: rgba(144, 202, 249, 0.4);
+  --mba-bg: #1a237e;
+  --mba-accent: rgba(0, 188, 212, 0.4);
+  --gunma-bg: #fff3e0;
+  --gunma-accent: rgba(255, 138, 101, 0.4);
+  --text-color: #333;
+  --white: rgba(255, 255, 255, 0.9);
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --btn-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  transition: background-color 0.8s ease, color 0.8s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Background image for Yoriso mode (Healing) */
+body.theme-yoriso {
+  background-color: var(--yoriso-bg);
+  color: #2c3e50;
+  background-image:
+    url('/bg-yoriso.png'),
+    radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.5) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(144, 249, 202, 0.3) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(144, 202, 249, 0.4) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(249, 144, 188, 0.2) 0px, transparent 50%);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Background for MBA mode (Business) */
+body.theme-mba {
+  background-color: var(--mba-bg);
+  color: #fff;
+  background-image:
+    linear-gradient(135deg, rgba(26, 35, 126, 1) 0%, rgba(13, 71, 161, 1) 100%);
+  background-size: cover;
+}
+
+/* Background for Gunma mode (Grandma) */
+body.theme-gunma {
+  background-color: var(--gunma-bg);
+  color: #5d4037;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(255, 224, 178, 0.5) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(255, 204, 128, 0.3) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(255, 171, 145, 0.4) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(255, 236, 179, 0.2) 0px, transparent 50%);
+  background-size: cover;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+/* Status Indicator */
+.status-indicator {
+  position: absolute;
+  top: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 40px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  z-index: 60;
+}
+
+.pulse {
+  width: 14px;
+  height: 14px;
+  background: #4caf50;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 rgba(76, 175, 80, 0.8);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+  }
+}
+
+/* Hidden Zone for Mode Selection */
+.hidden-zone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  z-index: 100;
+  cursor: pointer;
+}
+
+/* Character Toggle Switch */
+.character-toggle-container {
+  position: absolute;
+  top: 90px;
+  display: flex;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  padding: 4px;
+  border-radius: 50px;
+  border: 1px solid var(--glass-border);
+  gap: 2px;
+  z-index: 50;
+  white-space: nowrap;
+  max-width: 95vw;
+}
+
+.toggle-btn {
+  border: none;
+  background: transparent;
+  padding: 10px 18px;
+  border-radius: 40px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: inherit;
+  opacity: 0.6;
+}
+
+.toggle-btn.active {
+  background: var(--white);
+  color: #333;
+  opacity: 1;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.theme-mba .toggle-btn.active {
+  background: #00bcd4;
+  color: white;
+}
+
+.theme-gunma .toggle-btn.active {
+  background: #ff7043;
+  color: white;
+}
+
+/* The BIG Button */
+.big-button {
+  margin-top: 160px;
+  width: clamp(260px, 75vw, 380px);
+  height: clamp(260px, 75vw, 380px);
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.3));
+  backdrop-filter: blur(20px);
+  box-shadow:
+    20px 20px 60px rgba(0, 0, 0, 0.05),
+    -20px -20px 60px rgba(255, 255, 255, 0.5),
+    inset 2px 2px 10px rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.theme-mba .big-button {
+  background: linear-gradient(145deg, rgba(0, 188, 212, 0.6), rgba(0, 151, 167, 0.3));
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.2),
+    inset 2px 2px 20px rgba(0, 255, 255, 0.4);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.big-button:active {
+  transform: scale(0.92);
+  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.button-content {
+  text-align: center;
+  z-index: 2;
+}
+
+.icon-mic {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 16px;
+  background: currentColor;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,14c1.66,0,3-1.34,3-3V5c0-1.66-1.34-3-3-3S9,3.34,9,5v6C9,12.66,10.34,14,12,14z M17,11c0,2.76-2.24,5-5,5s-5-2.24-5-5H5c0,3.53,2.61,6.43,6,6.92V21h2v-3.08c3.39-0.49,6-3.39,6-6.92H17z"/></svg>') no-repeat center;
+  mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,14c1.66,0,3-1.34,3-3V5c0-1.66-1.34-3-3-3S9,3.34,9,5v6C9,12.66,10.34,14,12,14z M17,11c0,2.76-2.24,5-5,5s-5-2.24-5-5H5c0,3.53,2.61,6.43,6,6.92V21h2v-3.08c3.39-0.49,6-3.39,6-6.92H17z"/></svg>') no-repeat center;
+}
+
+.theme-mba .icon-mic {
+  background: white;
+}
+
+#btn-label {
+  font-size: 1.4rem;
+  font-weight: 700;
+  max-width: 200px;
+  line-height: 1.4;
+}
+
+/* Animations for Listening State */
+.listening .wave-container {
+  display: block;
+}
+
+.listening .icon-mic {
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.wave-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+.wave {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: var(--yoriso-accent);
+  border-radius: 40%;
+  opacity: 0.4;
+  animation: rotate 6s infinite linear;
+}
+
+.theme-mba .wave {
+  background: var(--mba-accent);
+}
+
+.wave2 {
+  animation-duration: 4s;
+  opacity: 0.3;
+}
+
+.wave3 {
+  animation-duration: 9s;
+  opacity: 0.2;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Feature Panels */
+.feature-panel {
+  position: absolute;
+  bottom: 40px;
+  width: calc(100% - 80px);
+  max-width: 500px;
+  padding: 24px;
+  border-radius: 24px;
+  background: var(--white);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.5s ease;
+  z-index: 10;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Alert Overlay */
+.alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.alert-box {
+  background: white;
+  padding: 32px;
+  border-radius: 24px;
+  text-align: center;
+  max-width: 80%;
+  box-shadow: 0 20px 80px rgba(255, 0, 0, 0.2);
+}
+
+.alert-box h3 {
+  color: #f44336;
+  margin-bottom: 16px;
+  font-size: 1.8rem;
+}
+
+.alert-box button {
+  margin-top: 24px;
+  padding: 12px 32px;
+  border-radius: 12px;
+  background: #333;
+  color: white;
+  border: none;
+  font-size: 1.1rem;
+}
+
+/* Image Box */
+.image-box {
+  width: 100%;
+  height: 200px;
+  background: #eee;
+  border-radius: 12px;
+  margin-top: 16px;
+  background-size: cover;
+  background-position: center;
+}

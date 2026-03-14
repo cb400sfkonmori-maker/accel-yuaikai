@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="友愛会・寄り添いボイス - 誰にでも優しい、声でつながるインクルーシブ・コンシェルジュ" />
+  <title>友愛会・寄り添いボイス</title>
+</head>
+
+<body class="theme-yoriso">
+  <div id="app">
+    <main class="container">
+      <!-- Status Indicator -->
+      <div id="status" class="status-indicator">
+        <span class="pulse"></span>
+        <span id="status-text">待機中...</span>
+      </div>
+
+      <!-- Character Toggle Switch -->
+      <div class="character-toggle-container">
+        <button id="toggle-yoriso" class="toggle-btn active" data-mode="yoriso">寄り添い</button>
+        <button id="toggle-mba" class="toggle-btn" data-mode="mba">MBA先輩</button>
+        <button id="toggle-gunma" class="toggle-btn" data-mode="gunma">上里のダチ</button>
+      </div>
+
+      <!-- Hidden Switcher for MBA Senpai (Triple tap zone) -->
+      <div id="hidden-switch" class="hidden-zone"></div>
+
+      <!-- Core Component: The Big Button -->
+      <button id="main-voice-btn" class="big-button" aria-label="話しかける">
+        <div class="button-content">
+          <div id="voice-icon" class="icon-mic"></div>
+          <p id="btn-label">タップしてお話しください</p>
+        </div>
+        <div class="wave-container">
+          <div class="wave wave1"></div>
+          <div class="wave wave2"></div>
+          <div class="wave wave3"></div>
+        </div>
+      </button>
+
+      <!-- Feature Panels (Hidden by default, triggered by voice) -->
+      <section id="memory-album" class="feature-panel glass hidden">
+        <h2>思い出の記録</h2>
+        <div class="album-content">
+          <p id="album-text">AIが昔のお話を聞いています...</p>
+          <div id="album-img-placeholder" class="image-box"></div>
+        </div>
+      </section>
+
+      <section id="concierge-info" class="feature-panel glass hidden">
+        <h2>施設からのご案内</h2>
+        <p id="concierge-text"></p>
+      </section>
+
+    </main>
+
+    <!-- Overlay for Notifications/Alerts -->
+    <div id="staff-alert-overlay" class="alert-overlay hidden">
+      <div class="alert-box">
+        <h3>🚨 スタッフ・アラート</h3>
+        <p>八木社長に通知を送りました。</p>
+        <button id="close-alert">確認</button>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
