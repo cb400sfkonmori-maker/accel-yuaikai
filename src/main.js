@@ -228,6 +228,20 @@ function speakBack(msg, isUrgent = false) {
     utterance.rate = 1.1;
   }
 
+  const avatarWrapper = document.getElementById('avatar-wrapper');
+
+  utterance.onstart = () => {
+    if (avatarWrapper) avatarWrapper.classList.add('talking');
+  };
+
+  utterance.onend = () => {
+    if (avatarWrapper) avatarWrapper.classList.remove('talking');
+  };
+
+  utterance.onerror = () => {
+    if (avatarWrapper) avatarWrapper.classList.remove('talking');
+  };
+
   window.speechSynthesis.speak(utterance);
 }
 
@@ -240,6 +254,18 @@ function setMode(mode) {
   // Update Toggle UI
   toggleYoriso.classList.toggle('active', mode === 'yoriso');
   toggleGunma.classList.toggle('active', mode === 'gunma');
+
+  // Update Avatar Visibility (Only for Gunma mode)
+  const avatarWrapper = document.getElementById('avatar-wrapper');
+  if (avatarWrapper) {
+    if (mode === 'gunma') {
+      avatarWrapper.style.display = 'block';
+      setTimeout(() => avatarWrapper.style.opacity = '1', 10);
+    } else {
+      avatarWrapper.style.opacity = '0';
+      setTimeout(() => avatarWrapper.style.display = 'none', 300);
+    }
+  }
 
   const welcomeMsg = CHARACTERS[mode].welcome;
   speakBack(welcomeMsg);
