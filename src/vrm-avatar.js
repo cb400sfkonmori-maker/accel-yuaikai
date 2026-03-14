@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm';
 
-let scene, camera, renderer, currentVrm;
+let scene, camera, renderer, currentVrm, controls;
 let clock = new THREE.Clock();
 
 // Web Audio API
@@ -29,6 +30,16 @@ export function initVRMAvatar(containerId) {
     // Camera
     camera = new THREE.PerspectiveCamera(30.0, container.clientWidth / container.clientHeight, 0.1, 20.0);
     camera.position.set(0.0, 1.3, 1.5); // Adjust for Bust-up
+
+    // OrbitControls (視点操作)
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enablePan = false; // 平行移動を禁止し、中心を固定
+    controls.minDistance = 0.5; // 寄りすぎ制限
+    controls.maxDistance = 2.0; // 離れすぎ制限
+    controls.target.set(0, 1.4, 0); // 回転の中心をアバターの顔〜首の高さに設定
+    controls.enableDamping = true; // 操作を滑らかにするための慣性
+    controls.dampingFactor = 0.1;
+    controls.update(); // 初期設定を適用
 
     // Scene
     scene = new THREE.Scene();
@@ -99,17 +110,19 @@ export function initVRMAvatar(containerId) {
         }
     );
 
-    // Resize handler
-    window.addEventListener('resize', () => {
-        if (!container) return;
-        // スマホ画面のリサイズ（アドレスバーの表示切替など）への確実な追従のための一工夫
-        requestAnimationFrame(() => {
-            if (!container) return;
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
+    // Resize Observer (最強のレスポンシブ処理)
+    // キャンバスの親要素（container）のサイズが変更されたり、DOMレイアウト完了時に即座に追従して更新します。
+    const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+            const { width, height } = entry.contentRect;
+            if (width > 0 && height > 0) {
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            }
+        }
     });
+    resizeObserver.observe(container);
 
     // ここでの AudioContext 自動初期化を削除（スマホの自動再生ブロック回避のため、ユーザー操作時に実行）
 
@@ -149,6 +162,9 @@ export function setTalkingMode(talking) {
 function update() {
     requestAnimationFrame(update);
     const deltaTime = clock.getDelta();
+
+    // カメラ操作の滑らかな更新
+    if (controls) controls.update();
 
     if (currentVrm) {
         // 1. Audio Lip Sync (音声リップシンク)
@@ -212,6 +228,21 @@ function update() {
         }
 
         currentVrm.update(deltaTime);
+
+        // Tポーズの絶対解除（ブルートフォース）
+        // VRMのバージョン差異による問題や、vrm.update() による上書きを毎フレーム強制的に防ぐ
+        const getBone = (name, fallbackName) => {
+            if (currentVrm.humanoid.getBoneNode) {
+                return currentVrm.humanoid.getBoneNode(THREE.VRMSchema?.HumanoidBoneName?.[name] || fallbackName);
+            }
+            return currentVrm.humanoid.getRawBoneNode(fallbackName); // VRM 1.0 向けフォールバック
+        };
+
+        const leftArm = getBone('leftUpperArm', 'leftUpperArm');
+        const rightArm = getBone('rightUpperArm', 'rightUpperArm');
+
+        if (leftArm) leftArm.rotation.z = 1.2;
+        if (rightArm) rightArm.rotation.z = -1.2;
     }
 
     renderer.render(scene, camera);
