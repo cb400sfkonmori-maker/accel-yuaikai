@@ -1,6 +1,6 @@
 import './style.css';
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { initVRMAvatar, setTalkingMode } from './vrm-avatar.js';
+import { initVRMAvatar, setTalkingMode, initAudio } from './vrm-avatar.js';
 
 // --- Global State ---
 let isListening = false;
@@ -102,6 +102,9 @@ if (recognition) {
 // --- Interaction Logic ---
 
 function toggleListening() {
+  // スマホ特有の自動再生ブロック回避のため、ユーザーの初回インタラクション時にAudioContextとマイク取得を初期化
+  initAudio();
+
   if (!API_KEY) {
     alert("VITE_GEMINI_API_KEY が設定されていません。");
     return;

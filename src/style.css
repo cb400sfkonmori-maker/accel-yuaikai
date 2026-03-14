@@ -369,9 +369,53 @@ body.theme-gunma {
 }
 
 .avatar-wrapper canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100% !important;
   height: 100% !important;
+  object-fit: cover;
   outline: none;
+}
+
+/* Loading UI for Avatar */
+.avatar-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(4px);
+  border-radius: 50%;
+  z-index: 10;
+  transition: opacity 0.5s ease;
+}
+
+.avatar-loading p {
+  font-size: 0.8rem;
+  margin-top: 12px;
+  font-weight: 600;
+  color: #5d4037;
+}
+
+.avatar-loading .spinner {
+  width: 36px;
+  height: 36px;
+  border: 4px solid var(--gunma-accent);
+  border-top-color: #ff7043;
+  border-radius: 50%;
+  animation: avatar-spin 1s linear infinite;
+}
+
+@keyframes avatar-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Adjust big button margin to accommodate avatar */
